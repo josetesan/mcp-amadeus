@@ -8,9 +8,9 @@
         <version>3.4.3</version>
         <relativePath/>
     </parent>
-    <groupId>com.amadeus.api</groupId>
-    <artifactId>recommended-locations</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>es.josetesan.mcp</groupId>
+    <artifactId>amadeus-recommended-locations</artifactId>
+    <version>0.0.1</version>
     <name>recommended-locations</name>
     <description>Amadeus Recommended Locations API</description>
     

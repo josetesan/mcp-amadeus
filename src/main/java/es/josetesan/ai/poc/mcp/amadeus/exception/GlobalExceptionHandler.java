@@ -6,38 +6,27 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseException.class)
-    public ResponseEntity<Map<String, Object>> handleAmadeusException(ResponseException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Amadeus API Error");
-        errorResponse.put("code", e.getCode());
-        errorResponse.put("message", e.getDescription());
-        
-        return ResponseEntity.status(e.getResponse().getStatusCode()).body(errorResponse);
+//    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<String> handleAmadeusException(ResponseException e) {
+        Error error = new Error(e.getCode(),e.getDescription());
+        return ResponseEntity.status(e.getResponse().getStatusCode()).body(error.toString());
     }
     
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Missing Required Parameter");
-        errorResponse.put("parameter", e.getParameterName());
-        errorResponse.put("message", e.getMessage());
-        
-        return ResponseEntity.badRequest().body(errorResponse);
+//    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException e) {
+
+        Error error = new Error("400",String.format("Missing parameter %s",e.getParameterName()));
+        return ResponseEntity.badRequest().body(error.toString());
     }
     
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Internal Server Error");
-        errorResponse.put("message", e.getMessage());
-        
-        return ResponseEntity.internalServerError().body(errorResponse);
+//    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception e) {
+        Error error = new Error("500",e.getMessage());
+        return ResponseEntity.internalServerError().body(error.toString());
     }
+
+    public record Error(String code,String message){}
 }
